@@ -31,6 +31,12 @@ public class FrmUsuarios extends javax.swing.JFrame {
             //System.out.println("Validacion apellidos");
             resultado = true;
         }
+         if (txtCorreo.getText().length()==0) {
+            mensaje = mensaje + "Correo camnpo obligatorio\n";
+            System.out.println("Validacion apellidos");
+            resultado = true;
+        }
+        
         
         return resultado;
     }
