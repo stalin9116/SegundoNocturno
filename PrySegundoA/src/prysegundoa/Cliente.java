@@ -11,6 +11,7 @@ public class Cliente {
     private String nombres;
     private String direccion;
     private String telefono;
+    private String correo;
 
     //Constructor
     
@@ -63,6 +64,14 @@ public class Cliente {
     
     public String obtenerTelefono(){
         return telefono;
+    }
+
+    public String getCorreo() {
+        return correo;
+    }
+
+    public void setCorreo(String correo) {
+        this.correo = correo;
     }
     
     
