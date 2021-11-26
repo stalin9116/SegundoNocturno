@@ -145,7 +145,8 @@ public class FrmLogin extends javax.swing.JFrame {
     private void login() {
         String correo = txtCorreo.getText();
         String clave = String.valueOf(txtClave.getPassword());
-
+        
+                
         System.out.println(usuario1.obtenerApellido());
 
         if (correo.equals(usuario1.obtenerCorreo()) && clave.equals(usuario1.obtenerClave())) {

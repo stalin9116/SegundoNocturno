@@ -1,12 +1,17 @@
 package prysegundoa;
 
+import prysegundoa.Formularios.*;
+
 public class PrySegundoA {
 
     public static void main(String[] args) {
 
-        FrmLogin frmlogin= new FrmLogin();
-        frmlogin.setVisible(true);
+        /*FrmLogin frmlogin= new FrmLogin();
+        frmlogin.setVisible(true);*/
         
+        
+        FrmCalificaciones  frmCalificaciones= new FrmCalificaciones();
+        frmCalificaciones.setVisible(true);
         
         
         //instanciar un objeto - reservar memoria - clase de Cliente
