@@ -23,7 +23,9 @@ public class Conexion {
     public Connection obtenerConexion()
     {
         try {
-            conexion = DriverManager.getConnection(this.cadenaConexion, "root", "Sistemas.20");
+            
+            System.out.println(this.cadenaConexion);
+            conexion = DriverManager.getConnection(this.cadenaConexion, "root", "StalinMejia91");
             
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());

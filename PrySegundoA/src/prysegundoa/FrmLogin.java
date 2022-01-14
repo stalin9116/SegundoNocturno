@@ -2,6 +2,7 @@ package prysegundoa;
 
 import prysegundoa.Objetos.*;
 import javax.swing.JOptionPane;
+import logica.logicaUsuario;
 
 public class FrmLogin extends javax.swing.JFrame {
 
@@ -145,12 +146,15 @@ public class FrmLogin extends javax.swing.JFrame {
     private void login() {
         String correo = txtCorreo.getText();
         String clave = String.valueOf(txtClave.getPassword());
-        
-                
-        System.out.println(usuario1.obtenerApellido());
 
-        if (correo.equals(usuario1.obtenerCorreo()) && clave.equals(usuario1.obtenerClave())) {
-            JOptionPane.showMessageDialog(this, "Bienvenido al Sistema \n" + usuario1.toString() + "\n " + usuario1.getRol().getDescripcion(), "Sistema XYZ", JOptionPane.OK_OPTION);
+        logica.logicaUsuario logicaUser = new logicaUsuario();
+
+        Usuario usuario = new Usuario();
+
+        usuario = logicaUser.obtenerUsuariosLoginRol(correo, clave);
+
+        if (usuario != null) {
+            JOptionPane.showMessageDialog(this, "Bienvenido al Sistema \n" + usuario.toString() + "\n ", "Sistema XYZ", JOptionPane.OK_OPTION);
 
             //Instancia o a crear un nuevo objeto del formulario principal
             FrmPrincipal frmprincipal = new FrmPrincipal();

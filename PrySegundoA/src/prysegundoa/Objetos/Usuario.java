@@ -3,6 +3,7 @@ package prysegundoa.Objetos;
 public class Usuario {
 
     //atributos
+    private int codigo;
     private String correo;
     private String clave;
     private String nombre;
@@ -11,6 +12,14 @@ public class Usuario {
 
     public Usuario() {
 
+    }
+
+    public int obtenerCodigo() {
+        return codigo;
+    }
+
+    public void modificarCodigo(int codigo) {
+        this.codigo = codigo;
     }
 
     public String obtenerCorreo() {
@@ -55,7 +64,7 @@ public class Usuario {
 
     @Override
     public String toString() {
-        return "" + nombre + " " + apellido + "\n" + rol.getDescripcion();
+        return "" + nombre + " " + apellido + "\n" + this.getRol().getDescripcion();
     }
 
 }

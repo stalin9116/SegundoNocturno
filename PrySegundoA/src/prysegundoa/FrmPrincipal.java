@@ -131,6 +131,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void MenuUsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuUsuariosActionPerformed
+
         FrmUsuarios frmUsuarios = new FrmUsuarios();
         frmUsuarios.setVisible(true);
     }//GEN-LAST:event_MenuUsuariosActionPerformed
