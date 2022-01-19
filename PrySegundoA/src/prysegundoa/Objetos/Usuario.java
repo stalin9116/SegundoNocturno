@@ -8,6 +8,7 @@ public class Usuario {
     private String clave;
     private String nombre;
     private String apellido;
+    private String estado;
     private Rol rol;
 
     public Usuario() {
@@ -60,6 +61,14 @@ public class Usuario {
 
     public void setRol(Rol rol) {
         this.rol = rol;
+    }
+
+    public String obtenerEstado() {
+        return estado;
+    }
+
+    public void modificarEstado(String estado) {
+        this.estado = estado;
     }
 
     @Override

@@ -1,6 +1,9 @@
 package prysegundoa.Formularios;
 
 import java.util.ArrayList;
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
+import logica.logicaUsuario;
 import prysegundoa.Objetos.Rol;
 import prysegundoa.Objetos.Usuario;
 
@@ -9,10 +12,46 @@ public class FrmUsuarios extends javax.swing.JFrame {
     private ArrayList<Usuario> listaUsuarios = new ArrayList<>();
 
     public FrmUsuarios() {
+        //Carga todos los contrle UI botones, etiquetas, combobox, jtable
         initComponents();
         this.setLocationRelativeTo(null);
+        cargarDatos();
     }
     private String mensaje = "";
+    
+    private void cargarDatos()
+    {
+        logicaUsuario logicUsuario= new logicaUsuario();
+        //Objeto asignar el resultado de la logica
+        List<Usuario> ListUsuario = new ArrayList<>();
+        
+        ListUsuario= logicUsuario.obtenerUsuariosActivosRol();
+        if (ListUsuario.size()>0 && ListUsuario != null ) {
+            DefaultTableModel modelo = new DefaultTableModel();
+            modelo.addColumn("Codigo");
+            modelo.addColumn("Correo");
+            modelo.addColumn("Apellidos");
+            modelo.addColumn("Nombres");
+            modelo.addColumn("Estado");
+            
+            
+            for(Usuario item: ListUsuario){
+                modelo.addRow(new Object[]{
+                    item.obtenerCodigo(),
+                    item.obtenerCorreo(),
+                    item.obtenerApellido(),
+                    item.obtenerNombre(),
+                    item.obtenerEstado()
+                });    
+            }
+            TableUsuarios.setModel(modelo);
+            
+        }
+        
+    }
+    
+    
+    
 
     private void limpiar() {
         txtApellidos.setText("");
@@ -53,7 +92,7 @@ public class FrmUsuarios extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         lbl = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tblUsuarios = new javax.swing.JTable();
+        TableUsuarios = new javax.swing.JTable();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
@@ -81,7 +120,7 @@ public class FrmUsuarios extends javax.swing.JFrame {
 
         lbl.setText("Codigo");
 
-        tblUsuarios.setModel(new javax.swing.table.DefaultTableModel(
+        TableUsuarios.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -92,7 +131,7 @@ public class FrmUsuarios extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(tblUsuarios);
+        jScrollPane1.setViewportView(TableUsuarios);
 
         jLabel2.setText("Correo");
 
@@ -345,6 +384,7 @@ public class FrmUsuarios extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Imprimir;
+    private javax.swing.JTable TableUsuarios;
     private javax.swing.JButton btnBuscar;
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnEliminar;
@@ -361,7 +401,6 @@ public class FrmUsuarios extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lbl;
-    private javax.swing.JTable tblUsuarios;
     private javax.swing.JTextField txtApellidos;
     private javax.swing.JPasswordField txtClave;
     private javax.swing.JPasswordField txtClave2;
