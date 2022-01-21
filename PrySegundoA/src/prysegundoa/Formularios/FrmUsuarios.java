@@ -2,31 +2,33 @@ package prysegundoa.Formularios;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import logica.logicaRol;
 import logica.logicaUsuario;
-import prysegundoa.Objetos.Rol;
-import prysegundoa.Objetos.Usuario;
+import prysegundoa.Objetos.*;
 
 public class FrmUsuarios extends javax.swing.JFrame {
-
+    
     private ArrayList<Usuario> listaUsuarios = new ArrayList<>();
-
+    
     public FrmUsuarios() {
         //Carga todos los contrle UI botones, etiquetas, combobox, jtable
         initComponents();
         this.setLocationRelativeTo(null);
         cargarDatos();
+        cargarRoles();
     }
     private String mensaje = "";
     
-    private void cargarDatos()
-    {
-        logicaUsuario logicUsuario= new logicaUsuario();
+    private void cargarDatos() {
+        logicaUsuario logicUsuario = new logicaUsuario();
         //Objeto asignar el resultado de la logica
         List<Usuario> ListUsuario = new ArrayList<>();
         
-        ListUsuario= logicUsuario.obtenerUsuariosActivosRol();
-        if (ListUsuario.size()>0 && ListUsuario != null ) {
+        ListUsuario = logicUsuario.obtenerUsuariosActivosRol();
+        if (ListUsuario.size() > 0 && ListUsuario != null) {
             DefaultTableModel modelo = new DefaultTableModel();
             modelo.addColumn("Codigo");
             modelo.addColumn("Correo");
@@ -34,15 +36,14 @@ public class FrmUsuarios extends javax.swing.JFrame {
             modelo.addColumn("Nombres");
             modelo.addColumn("Estado");
             
-            
-            for(Usuario item: ListUsuario){
+            for (Usuario item : ListUsuario) {
                 modelo.addRow(new Object[]{
                     item.obtenerCodigo(),
                     item.obtenerCorreo(),
                     item.obtenerApellido(),
                     item.obtenerNombre(),
                     item.obtenerEstado()
-                });    
+                });
             }
             TableUsuarios.setModel(modelo);
             
@@ -50,9 +51,22 @@ public class FrmUsuarios extends javax.swing.JFrame {
         
     }
     
+    private void cargarRoles() {
+        logicaRol logicRol = new logicaRol();
+        List<Rol> ListRol = new ArrayList<>();
+        ListRol = logicRol.obtenerRoles();
+        if (ListRol.size() > 0 && ListRol != null) {
+            DefaultComboBoxModel model = new DefaultComboBoxModel();
+            
+            for (Rol item : ListRol) {
+                model.addElement(new ComboboxItems(String.valueOf(item.getCodigoRol()), item.getDescripcion()));
+            }
+            
+            cmbRol.setModel(model);
+        }
+        
+    }
     
-    
-
     private void limpiar() {
         txtApellidos.setText("");
         txtNombres.setText("");
@@ -61,10 +75,10 @@ public class FrmUsuarios extends javax.swing.JFrame {
         txtClave.setText("");
         txtClave2.setText("");
     }
-
+    
     private boolean validaciones() {
         boolean resultado = false;
-
+        
         if (txtNombres.getText().length() == 0) {
             mensaje = mensaje + "Nombre camnpo obligatorio\n";
             //System.out.println("Validacion nombre");
@@ -80,10 +94,10 @@ public class FrmUsuarios extends javax.swing.JFrame {
             System.out.println("Validacion apellidos");
             resultado = true;
         }
-
+        
         return resultado;
     }
-
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -302,39 +316,47 @@ public class FrmUsuarios extends javax.swing.JFrame {
     }//GEN-LAST:event_btnLimpiarActionPerformed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-
-        Usuario usuario1 = new Usuario();
-        usuario1.modificarApellido("Mejia");
-        usuario1.modificarNombre("Stalin");
-        usuario1.modificarCorreo("stalin9116@gmail.com");
-        usuario1.modificarClave("12345");
-        Rol rolUsuario1 = new Rol();
-        rolUsuario1.setCodigoRol(1);
-        rolUsuario1.setDescripcion("Administrador");
-        usuario1.setRol(rolUsuario1);
-
-        listaUsuarios.add(usuario1);
-
-        Usuario usuario2 = new Usuario();
-        usuario2.modificarApellido("Carrera");
-        usuario2.modificarNombre("Pedro");
-        usuario2.modificarCorreo("pedro@gmail.com");
-        usuario2.modificarClave("54321");
-        rolUsuario1.setCodigoRol(1);
-        rolUsuario1.setDescripcion("Administrador");
-        usuario2.setRol(rolUsuario1);
-
-        listaUsuarios.add(usuario2);
-
-        if (validaciones()) {
-            System.out.println(mensaje);
-        }
+        GuardarUsuario();
     }//GEN-LAST:event_btnGuardarActionPerformed
-
+    
+    private void GuardarUsuario() {
+        try {
+            Usuario usuario1 = new Usuario();
+            usuario1.modificarApellido(txtApellidos.getText());
+            usuario1.modificarNombre(txtNombres.getText());
+            usuario1.modificarCorreo(txtCorreo.getText());
+            usuario1.modificarClave(txtClave.getText());
+            
+            //Obtener el codigo del combobox
+            Object rolSeleccionado = cmbRol.getSelectedItem();
+            String rolCodigo = ((ComboboxItems) rolSeleccionado).getCodigo();
+            
+            Rol rolUsuario1 = new Rol();
+            rolUsuario1.setCodigoRol(Integer.parseInt(rolCodigo));
+            usuario1.setRol(rolUsuario1);
+            
+            if (validaciones()) {
+                System.out.println(mensaje);
+            }
+            
+            logicaUsuario logicUsuario = new logicaUsuario();
+            boolean resulInsert = logicUsuario.guardarUsuario(usuario1);
+            if (resulInsert) {
+                JOptionPane.showMessageDialog(this, "Usuario Registrado correctamente", "Sistema XYZ", JOptionPane.CANCEL_OPTION);
+                cargarDatos();
+                limpiar();
+            } else {
+                JOptionPane.showMessageDialog(this, "Error al registrar usuarios", "Sistema XYZ", JOptionPane.CANCEL_OPTION);
+            }
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+        
+    }
+    
     private void ImprimirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ImprimirActionPerformed
         for (Usuario varUsuario : listaUsuarios) {
             System.out.println(varUsuario.toString() + "\n");
-
         }
     }//GEN-LAST:event_ImprimirActionPerformed
 
@@ -346,10 +368,8 @@ public class FrmUsuarios extends javax.swing.JFrame {
                 System.out.println(varUsuario.toString() + "\n");
             }
         }
-        
-        
     }//GEN-LAST:event_btnBuscarActionPerformed
-
+    
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
