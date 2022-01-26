@@ -222,4 +222,74 @@ public class logicaUsuario {
         }
     }
 
+    public boolean modificarUsuario(Usuario datosUsuario) {
+        try {
+            Conexion cn = new Conexion();
+            Connection cc = cn.obtenerConexion();
+
+            String sql = "UPDATE usuario SET usu_correo=?, usu_clave=?, usu_apellidos=?, usu_nombres=?, rol_codigo=? "
+                       + "WHERE usu_codigo=?;";
+
+            PreparedStatement pst = cc.prepareStatement(sql);
+            
+            pst.setString(1, datosUsuario.obtenerCorreo());
+            pst.setString(2, datosUsuario.obtenerClave());
+            pst.setString(3, datosUsuario.obtenerApellido());
+            pst.setString(4, datosUsuario.obtenerNombre());
+            pst.setInt(5, datosUsuario.getRol().getCodigoRol());
+            pst.setInt(6, datosUsuario.obtenerCodigo());
+
+            int rows = pst.executeUpdate();
+            return rows > 0;
+
+        } catch (SQLException ex) {
+               System.out.println(ex.getMessage());  
+               return false;
+        }
+    }
+    
+    //Eliminar Logica
+    public boolean eliminarUsuarioLogica(int codigoUsuario) {
+        try {
+            Conexion cn = new Conexion();
+            Connection cc = cn.obtenerConexion();
+
+            String sql = "UPDATE usuario SET usu_status='I' "
+                       + "WHERE usu_codigo=?;";
+
+            PreparedStatement pst = cc.prepareStatement(sql);
+            
+            pst.setInt(1, codigoUsuario);
+
+            int rows = pst.executeUpdate();
+            return rows > 0;
+
+        } catch (SQLException ex) {
+               System.out.println(ex.getMessage());  
+               return false;
+        }
+    }
+    
+    //Eliminar Logica
+    public boolean eliminarUsuarioFisica(int codigoUsuario) {
+        try {
+            Conexion cn = new Conexion();
+            Connection cc = cn.obtenerConexion();
+
+            String sql = "DELETE FROM usuario "
+                       + "WHERE usu_codigo=?;";
+
+            PreparedStatement pst = cc.prepareStatement(sql);
+            
+            pst.setInt(1, codigoUsuario);
+
+            int rows = pst.executeUpdate();
+            return rows > 0;
+
+        } catch (SQLException ex) {
+               System.out.println(ex.getMessage());  
+               return false;
+        }
+    }
+    
 }
