@@ -12,8 +12,9 @@ public class Rol {
         
     }
 
-    public Rol(int i, String string) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Rol(int codigo, String descripcion) {
+        this.codigoRol = codigo;
+        this.descripcion= descripcion;
     }
 
     public int getCodigoRol() {

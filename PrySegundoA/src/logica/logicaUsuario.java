@@ -156,8 +156,8 @@ public class logicaUsuario {
         //Abrir conexion a la base de datos
         Connection cc = cn.obtenerConexion();
 
-        String sql = "SELECT usu_codigo, usu_correo, usu_clave, usu_nombres, usu_apellidos, usu_status "
-                + "FROM usuario "
+        String sql = "SELECT usu_codigo, usu_correo, usu_clave, usu_nombres, usu_apellidos, usu_status, rol_descripcion "
+                + "FROM usuario u INNER JOIN rol r on u.rol_codigo=r.rol_codigo "
                 + "WHERE usu_status='A';";
 
         System.out.println(sql);
@@ -179,6 +179,55 @@ public class logicaUsuario {
                 usuario.modificarNombre(rs.getString(4));
                 usuario.modificarApellido(rs.getString(5));
                 usuario.modificarEstado(rs.getString(6));
+                usuario.setRol(new Rol(0, rs.getString(7)));
+                
+                listaUsuario.add(usuario);
+                cont++;
+            }
+            if (cont > 0) {
+                return listaUsuario;
+            } else {
+                return null;
+            }
+
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+            return null;
+        }
+    }
+    
+    
+    public static List<Usuario> obtenerUsuariosActivosXNombres(String nombres) {
+        //Instanciar mi clase de conexion
+        Conexion cn = new Conexion();
+        //Abrir conexion a la base de datos
+        Connection cc = cn.obtenerConexion();
+
+        String sql = "SELECT usu_codigo, usu_correo, usu_clave, usu_nombres, usu_apellidos, usu_status, rol_descripcion "
+                + "FROM usuario u INNER JOIN rol r on u.rol_codigo=r.rol_codigo "
+                + "WHERE usu_status='A'"
+                + "AND usu_nombres like '"+nombres+"%';";
+
+        System.out.println(sql);
+
+        List<Usuario> listaUsuario = new ArrayList<>();
+
+        try {
+
+            Statement st = cc.createStatement();
+            ResultSet rs = st.executeQuery(sql);
+
+            int cont = 0;
+
+            while (rs.next()) {
+                Usuario usuario = new Usuario();
+                usuario.modificarCodigo(rs.getInt(1));
+                usuario.modificarCorreo(rs.getString(2));
+                usuario.modificarClave(rs.getString(3));
+                usuario.modificarNombre(rs.getString(4));
+                usuario.modificarApellido(rs.getString(5));
+                usuario.modificarEstado(rs.getString(6));
+                usuario.setRol(new Rol(0, rs.getString(7)));
                 
                 listaUsuario.add(usuario);
                 cont++;

@@ -23,7 +23,7 @@ public class logicaRol {
 
     public logicaRol() {
     }
-    
+
     public List<Rol> obtenerRoles() {
         //Instanciar mi clase de conexion
         Conexion cn = new Conexion();
@@ -31,7 +31,7 @@ public class logicaRol {
         Connection cc = cn.obtenerConexion();
 
         String sql = "SELECT rol_codigo, rol_descripcion, rol_status FROM rol ORDER BY rol_descripcion; ";
-                
+
         System.out.println(sql);
 
         List<Rol> listaRoles = new ArrayList<>();
@@ -62,5 +62,44 @@ public class logicaRol {
             return null;
         }
     }
-    
+
+    public static Rol obtenerRolesXDescripcion(String descripcion) {
+        //Instanciar mi clase de conexion
+        Conexion cn = new Conexion();
+        //Abrir conexion a la base de datos
+        Connection cc = cn.obtenerConexion();
+
+        String sql = "SELECT rol_codigo, rol_descripcion, rol_status FROM rol "
+                + "WHERE rol_descripcion='" + descripcion + "'";
+
+        System.out.println(sql);
+
+        Rol rol = new Rol();
+
+        try {
+
+            Statement st = cc.createStatement();
+            ResultSet rs = st.executeQuery(sql);
+
+            int cont = 0;
+
+            while (rs.next()) {
+                
+                rol.setCodigoRol(rs.getInt(1));
+                rol.setDescripcion(rs.getString(2));
+                rol.setEstado(rs.getString(3));
+                cont++;
+            }
+            if (cont > 0) {
+                return rol;
+            } else {
+                return null;
+            }
+
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+            return null;
+        }
+    }
+
 }

@@ -10,23 +10,29 @@ import logica.logicaUsuario;
 import prysegundoa.Objetos.*;
 
 public class FrmUsuarios extends javax.swing.JFrame {
-    
+
     private ArrayList<Usuario> listaUsuarios = new ArrayList<>();
-    
+
     public FrmUsuarios() {
         //Carga todos los contrle UI botones, etiquetas, combobox, jtable
         initComponents();
         this.setLocationRelativeTo(null);
         cargarDatos();
         cargarRoles();
+        menuJtableUsuario();
     }
+
+    private void menuJtableUsuario() {
+        TableUsuarios.setComponentPopupMenu(jPopupMenuUsuarios);
+    }
+
     private String mensaje = "";
-    
+
     private void cargarDatos() {
         logicaUsuario logicUsuario = new logicaUsuario();
         //Objeto asignar el resultado de la logica
         List<Usuario> ListUsuario = new ArrayList<>();
-        
+
         ListUsuario = logicUsuario.obtenerUsuariosActivosRol();
         if (ListUsuario.size() > 0 && ListUsuario != null) {
             DefaultTableModel modelo = new DefaultTableModel();
@@ -34,39 +40,41 @@ public class FrmUsuarios extends javax.swing.JFrame {
             modelo.addColumn("Correo");
             modelo.addColumn("Apellidos");
             modelo.addColumn("Nombres");
+            modelo.addColumn("Rol");
             modelo.addColumn("Estado");
-            
+
             for (Usuario item : ListUsuario) {
                 modelo.addRow(new Object[]{
                     item.obtenerCodigo(),
                     item.obtenerCorreo(),
                     item.obtenerApellido(),
                     item.obtenerNombre(),
+                    item.getRol().getDescripcion(),
                     item.obtenerEstado()
                 });
             }
             TableUsuarios.setModel(modelo);
-            
+
         }
-        
+
     }
-    
+
     private void cargarRoles() {
         logicaRol logicRol = new logicaRol();
         List<Rol> ListRol = new ArrayList<>();
         ListRol = logicRol.obtenerRoles();
         if (ListRol.size() > 0 && ListRol != null) {
             DefaultComboBoxModel model = new DefaultComboBoxModel();
-            
+
             for (Rol item : ListRol) {
                 model.addElement(new ComboboxItems(String.valueOf(item.getCodigoRol()), item.getDescripcion()));
             }
-            
+
             cmbRol.setModel(model);
         }
-        
+
     }
-    
+
     private void limpiar() {
         txtApellidos.setText("");
         txtNombres.setText("");
@@ -75,10 +83,10 @@ public class FrmUsuarios extends javax.swing.JFrame {
         txtClave.setText("");
         txtClave2.setText("");
     }
-    
+
     private boolean validaciones() {
         boolean resultado = false;
-        
+
         if (txtNombres.getText().length() == 0) {
             mensaje = mensaje + "Nombre camnpo obligatorio\n";
             //System.out.println("Validacion nombre");
@@ -94,14 +102,17 @@ public class FrmUsuarios extends javax.swing.JFrame {
             System.out.println("Validacion apellidos");
             resultado = true;
         }
-        
+
         return resultado;
     }
-    
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPopupMenuUsuarios = new javax.swing.JPopupMenu();
+        jMenuItemEditar = new javax.swing.JMenuItem();
+        jMenuItemEliminar = new javax.swing.JMenuItem();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         lbl = new javax.swing.JLabel();
@@ -127,6 +138,23 @@ public class FrmUsuarios extends javax.swing.JFrame {
         Imprimir = new javax.swing.JButton();
         btnBuscar = new javax.swing.JButton();
         btnModificar = new javax.swing.JButton();
+        txtBuscar = new javax.swing.JTextField();
+
+        jMenuItemEditar.setText("Editar");
+        jMenuItemEditar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemEditarActionPerformed(evt);
+            }
+        });
+        jPopupMenuUsuarios.add(jMenuItemEditar);
+
+        jMenuItemEliminar.setText("Eliminar");
+        jMenuItemEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemEliminarActionPerformed(evt);
+            }
+        });
+        jPopupMenuUsuarios.add(jMenuItemEliminar);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -220,6 +248,7 @@ public class FrmUsuarios extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 721, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(27, 27, 27)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(jPanel1Layout.createSequentialGroup()
                                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
@@ -237,40 +266,37 @@ public class FrmUsuarios extends javax.swing.JFrame {
                                         .addGap(0, 0, Short.MAX_VALUE))
                                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                    .addComponent(jLabel2)
-                                                    .addComponent(jLabel3))
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                                .addGap(0, 0, Short.MAX_VALUE)
-                                                .addComponent(btnCancelar)
-                                                .addGap(18, 18, 18)
-                                                .addComponent(btnLimpiar)
-                                                .addGap(18, 18, 18)
-                                                .addComponent(btnGuardar)
-                                                .addGap(18, 18, 18)
-                                                .addComponent(btnModificar)
-                                                .addGap(24, 24, 24)))
+                                            .addComponent(jLabel2)
+                                            .addComponent(jLabel3))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(btnEliminar)
-                                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING)
-                                                .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING)
-                                                .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING)))))
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                                .addComponent(txtApellidos, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addComponent(txtNombres, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                            .addComponent(cmbRol, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGap(57, 57, 57))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                                        .addGap(14, 14, 14)
-                                        .addComponent(Imprimir)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(btnBuscar)))))))
+                                            .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING))))
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(txtApellidos, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(txtNombres, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(cmbRol, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(btnCancelar)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnLimpiar)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnGuardar)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnModificar)
+                                .addGap(24, 24, 24)
+                                .addComponent(btnEliminar)
+                                .addGap(14, 14, 14)
+                                .addComponent(Imprimir)
+                                .addGap(114, 114, 114))))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(237, 237, 237)
+                        .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 254, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnBuscar)))
                 .addContainerGap(67, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -280,7 +306,11 @@ public class FrmUsuarios extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(31, 31, 31)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnBuscar))
+                .addGap(24, 24, 24)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(lbl)
@@ -304,14 +334,13 @@ public class FrmUsuarios extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
                     .addComponent(txtClave2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(68, 68, 68)
+                .addGap(42, 42, 42)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnLimpiar)
                     .addComponent(btnGuardar)
                     .addComponent(btnEliminar)
                     .addComponent(btnCancelar)
                     .addComponent(Imprimir)
-                    .addComponent(btnBuscar)
                     .addComponent(btnModificar))
                 .addContainerGap(48, Short.MAX_VALUE))
         );
@@ -336,31 +365,30 @@ public class FrmUsuarios extends javax.swing.JFrame {
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
         GuardarUsuario();
-        
+
     }//GEN-LAST:event_btnGuardarActionPerformed
-    
+
     private void GuardarUsuario() {
         try {
             Usuario usuario1 = new Usuario();
-            
-            
+
             usuario1.modificarApellido(txtApellidos.getText());
             usuario1.modificarNombre(txtNombres.getText());
             usuario1.modificarCorreo(txtCorreo.getText());
             usuario1.modificarClave(txtClave.getText());
-            
+
             //Obtener el codigo del combobox
             Object rolSeleccionado = cmbRol.getSelectedItem();
             String rolCodigo = ((ComboboxItems) rolSeleccionado).getCodigo();
-            
+
             Rol rolUsuario1 = new Rol();
             rolUsuario1.setCodigoRol(Integer.parseInt(rolCodigo));
             usuario1.setRol(rolUsuario1);
-            
+
             if (validaciones()) {
                 System.out.println(mensaje);
             }
-            
+
             logicaUsuario logicUsuario = new logicaUsuario();
             boolean resulInsert = logicUsuario.guardarUsuario(usuario1);
             if (resulInsert) {
@@ -373,17 +401,17 @@ public class FrmUsuarios extends javax.swing.JFrame {
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
         }
-        
+
     }
-    
+
     private void ModificarUsuario() {
         try {
-            
+
             int verificar = JOptionPane.showConfirmDialog(null, "En realidad desea modificar ?");
-            
-            if (verificar==JOptionPane.YES_OPTION) {
+
+            if (verificar == JOptionPane.YES_OPTION) {
                 Usuario usuario1 = new Usuario();
-                
+
                 usuario1.modificarCodigo(Integer.parseInt(txtCodigo.getText()));
                 usuario1.modificarApellido(txtApellidos.getText());
                 usuario1.modificarNombre(txtNombres.getText());
@@ -393,15 +421,15 @@ public class FrmUsuarios extends javax.swing.JFrame {
                 //Obtener el codigo del combobox
                 Object rolSeleccionado = cmbRol.getSelectedItem();
                 String rolCodigo = ((ComboboxItems) rolSeleccionado).getCodigo();
-                
+
                 Rol rolUsuario1 = new Rol();
                 rolUsuario1.setCodigoRol(Integer.parseInt(rolCodigo));
                 usuario1.setRol(rolUsuario1);
-                
+
                 if (validaciones()) {
                     System.out.println(mensaje);
                 }
-                
+
                 logicaUsuario logicUsuario = new logicaUsuario();
                 boolean resulInsert = logicUsuario.modificarUsuario(usuario1);
                 if (resulInsert) {
@@ -415,10 +443,10 @@ public class FrmUsuarios extends javax.swing.JFrame {
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
         }
-        
+
     }
-    
-    
+
+
     private void ImprimirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ImprimirActionPerformed
         for (Usuario varUsuario : listaUsuarios) {
             System.out.println(varUsuario.toString() + "\n");
@@ -426,12 +454,40 @@ public class FrmUsuarios extends javax.swing.JFrame {
     }//GEN-LAST:event_ImprimirActionPerformed
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
-        String datoBuscar = txtApellidos.getText();
+        /*String datoBuscar = txtApellidos.getText();
         for (Usuario varUsuario : listaUsuarios) {
-            if (varUsuario.obtenerApellido().equals(datoBuscar)) {
-                System.out.println("Existe");
-                System.out.println(varUsuario.toString() + "\n");
+        if (varUsuario.obtenerApellido().equals(datoBuscar)) {
+        System.out.println("Existe");
+        System.out.println(varUsuario.toString() + "\n");
+        }
+        }*/
+
+        String datoBuscar = txtBuscar.getText();
+
+        List<Usuario> ListUsuario = new ArrayList<>();
+        ListUsuario = logicaUsuario.obtenerUsuariosActivosXNombres(datoBuscar);
+
+        if (ListUsuario.size() > 0 && ListUsuario != null) {
+            DefaultTableModel modelo = new DefaultTableModel();
+            modelo.addColumn("Codigo");
+            modelo.addColumn("Correo");
+            modelo.addColumn("Apellidos");
+            modelo.addColumn("Nombres");
+            modelo.addColumn("Rol");
+            modelo.addColumn("Estado");
+
+            for (Usuario item : ListUsuario) {
+                modelo.addRow(new Object[]{
+                    item.obtenerCodigo(),
+                    item.obtenerCorreo(),
+                    item.obtenerApellido(),
+                    item.obtenerNombre(),
+                    item.getRol().getDescripcion(),
+                    item.obtenerEstado()
+                });
             }
+            TableUsuarios.setModel(modelo);
+
         }
     }//GEN-LAST:event_btnBuscarActionPerformed
 
@@ -439,14 +495,15 @@ public class FrmUsuarios extends javax.swing.JFrame {
         ModificarUsuario();
     }//GEN-LAST:event_btnModificarActionPerformed
 
-     private void EliminarUsuario() {
+    private void EliminarUsuario(int codigoUsuario) {
         try {
-            
+
             int verificar = JOptionPane.showConfirmDialog(null, "En realidad desea eliminar ?");
-            
-            if (verificar==JOptionPane.YES_OPTION) {
+
+            if (verificar == JOptionPane.YES_OPTION) {
                 Usuario usuario1 = new Usuario();
-                usuario1.modificarCodigo(Integer.parseInt(txtCodigo.getText()));
+                usuario1.modificarCodigo(codigoUsuario);
+                //Integer.parseInt(txtCodigo.getText()));
                 logicaUsuario logicUsuario = new logicaUsuario();
                 boolean resulInsert = logicUsuario.eliminarUsuarioFisica(usuario1.obtenerCodigo());
                 if (resulInsert) {
@@ -460,13 +517,52 @@ public class FrmUsuarios extends javax.swing.JFrame {
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
         }
-        
+
     }
-    
+
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
-        EliminarUsuario();
+        EliminarUsuario(Integer.parseInt(txtCodigo.getText()));
     }//GEN-LAST:event_btnEliminarActionPerformed
-    
+
+    private void jMenuItemEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemEditarActionPerformed
+        int fila = TableUsuarios.getSelectedRow();
+        if (fila >= 0) {
+
+            //Capturar información de JTable
+            String codigo = TableUsuarios.getValueAt(fila, 0).toString();
+            String correo = TableUsuarios.getValueAt(fila, 1).toString();
+            String apellidos = TableUsuarios.getValueAt(fila, 2).toString();
+            String nombres = TableUsuarios.getValueAt(fila, 3).toString();
+            String rol = TableUsuarios.getValueAt(fila, 4).toString();
+
+            //Obtener el codigo de Rol desde la base de datos
+            Rol rolBase = new Rol();
+            rolBase = logicaRol.obtenerRolesXDescripcion(rol);
+
+            //Agregamos el modelo combobox para seleccionar item del rol
+            if (rolBase != null) {
+                cmbRol.getModel().setSelectedItem(new ComboboxItems(String.valueOf(rolBase.getCodigoRol()), rolBase.getDescripcion()));
+            }
+
+            cmbRol.setSelectedItem(rol);
+
+            //mostramos la información en las cajas y label del formulario
+            txtCodigo.setText(codigo);
+            txtCorreo.setText(correo);
+            txtApellidos.setText(apellidos);
+            txtNombres.setText(nombres);
+        }
+
+    }//GEN-LAST:event_jMenuItemEditarActionPerformed
+
+    private void jMenuItemEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemEliminarActionPerformed
+        int fila = TableUsuarios.getSelectedRow();
+        if (fila >= 0) {
+            String codigo = TableUsuarios.getValueAt(fila, 0).toString();
+            EliminarUsuario(Integer.parseInt(codigo));
+        }
+    }//GEN-LAST:event_jMenuItemEliminarActionPerformed
+
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -516,10 +612,14 @@ public class FrmUsuarios extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JMenuItem jMenuItemEditar;
+    private javax.swing.JMenuItem jMenuItemEliminar;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPopupMenu jPopupMenuUsuarios;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lbl;
     private javax.swing.JTextField txtApellidos;
+    private javax.swing.JTextField txtBuscar;
     private javax.swing.JPasswordField txtClave;
     private javax.swing.JPasswordField txtClave2;
     private javax.swing.JTextField txtCodigo;
